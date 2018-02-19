@@ -2,13 +2,14 @@
 
 '''
     Class: INF552 at USC
-    Submission Member: Vivek Bharadwaj <vivekb> <vivekb@usc.edu>
+    Submission Members:
+                        Vivek Bharadwaj <vivekb> <vivekb@usc.edu>
+                        Shushyam Malige Sharanappa <maligesh> <maligesh@usc.edu>
+                        Raveena Mathur <raveenam> <raveenam@usc.edu>
     This is a python implementation of Clustering using K-Means Algorithm.
     The Algorithm will accept numpy array of array: shape -> (XXXX, 2)
 '''
 
-__author__ = 'Vivek Bharadwaj'
-__email__ = 'vivekb@usc.edu'
 __version__ = '1.0'
 
 # Imports
@@ -18,6 +19,7 @@ import os # For checking PY_USER_LOG environ var for logging
 import logging
 import pprint
 import numpy as np
+import random
 # End imports
 
 # Setup logging
@@ -58,6 +60,7 @@ Cluster = namedtuple('Cluster', ['clusterNumber', 'centroid', 'pts'])
 
 @logArgsRet(logger)
 def getRandomPtsWithinRange(pts, numPoints):
+    '''
     # mins = [min(col1), min(col2), min(col3), ...]
     mins = np.apply_along_axis(min, arr=pts, axis=0)
     # maxs = [max(col1), max(col2), max(col3), ...])
@@ -71,8 +74,11 @@ def getRandomPtsWithinRange(pts, numPoints):
         np.apply_along_axis(lambda x: np.random.uniform(x[0], x[1]), arr=ranges, axis=0)
         for _ in range(numPoints)
         ))
+    '''
+    randPts = np.vstack((pts[idx] for idx in random.sample(range(0, len(pts)), numPoints)))
 
     return randPts
+
 
 @logArgsRet(logger)
 def KMeansCluster(pts, numClusters, maxIter=70):
@@ -112,7 +118,6 @@ def KMeansCluster(pts, numClusters, maxIter=70):
 if __name__ == '__main__':
     # Imports
     import sys
-    from numpy import genfromtxt
     # End imports
 
     HELP_TEXT = 'USAGE: {0} <ClustersDataCSVFile> <NumberOfClusters>'
@@ -123,8 +128,8 @@ if __name__ == '__main__':
         inFile = sys.argv[1]
         NClusters = int(sys.argv[2])
     
-    pts = genfromtxt(inFile, delimiter = ',')
+    pts = np.genfromtxt(inFile, delimiter = ',')
 
-    clusters = KMeansCluster(pts, numClusters = NClusters)
+    clusters = KMeansCluster(pts, numClusters = NClusters, maxIter=100)
     for cl in clusters:
         print('Cluster {0} - centroid {1}'.format(cl.clusterNumber, cl.centroid))
