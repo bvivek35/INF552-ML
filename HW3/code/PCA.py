@@ -57,10 +57,11 @@ def logArgsRet(logger=None):
 def decomposeComponents(X, targetDims):
     mean = np.mean(X, axis=0)
     X_Adj = (X-mean).T
-    covar = np.cov(X_Adj)
+    covar = np.matmul(X_Adj, X_Adj.T) / len(X)
     eigVals, eigVecs = LA.eig(covar)
     principalComps = sorted(enumerate(eigVals), key=lambda x:x[1], reverse=True)[:targetDims]
-    return [(count, eigVal, eigVecs[:,idx]) 
+    return [
+            (count, eigVal, eigVecs[:,idx]) \
             for count, (idx, eigVal) in enumerate(principalComps)
             ]
 
