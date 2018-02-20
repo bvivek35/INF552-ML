@@ -7,7 +7,6 @@
                         Shushyam Malige Sharanappa <maligesh> <maligesh@usc.edu>
                         Raveena Mathur <raveenam> <raveenam@usc.edu>
     This is a python implementation of Clustering using K-Means Algorithm.
-    The Algorithm will accept numpy array of array: shape -> (XXXX, 2)
 '''
 
 __version__ = '1.0'
@@ -31,7 +30,7 @@ logger = logging.getLogger(__name__)
 # Declare decorators
 def logArgsRet(logger=None):
     import pprint
-    def logArgsWrapped(fn):
+    def logArgsRetWrapped(fn):
         def loggedFn(*args, **kwargs):
             logMsg = 'Calling {0}({1}, {2})'.format( \
                 fn.__name__, \
@@ -53,7 +52,7 @@ def logArgsRet(logger=None):
             return ret
 
         return loggedFn
-    return logArgsWrapped
+    return logArgsRetWrapped
 
 # Declare types
 Cluster = namedtuple('Cluster', ['clusterNumber', 'centroid', 'pts'])

@@ -2,11 +2,11 @@
 
 '''
     Class: INF552 at USC
-    Submission Members:
+    Submission Member:
                         Vivek Bharadwaj <vivekb> <vivekb@usc.edu>
                         Shushyam Malige Sharanappa <maligesh> <maligesh@usc.edu>
                         Raveena Mathur <raveenam> <raveenam@usc.edu>
-    This is a python implementation of Clustering using K-Means Algorithm from the Scikit-Learn library.
+    This is a python example of Clustering using Gaussian Mixtures from the Scikit-Learn library.
 '''
 
 __version__ = '1.0'
@@ -14,8 +14,8 @@ __version__ = '1.0'
 if __name__ == '__main__':
     # Imports
     import sys
-    import numpy as np
-    from sklearn.cluster import KMeans
+    from numpy import genfromtxt
+    from sklearn.mixture import GaussianMixture
     # End imports
 
     HELP_TEXT = 'USAGE: {0} <ClustersDataCSVFile> <NumberOfClusters>'
@@ -26,7 +26,10 @@ if __name__ == '__main__':
         inFile = sys.argv[1]
         NClusters = int(sys.argv[2])
 
-    X = np.genfromtxt(inFile, delimiter = ',')
-    kmeans = KMeans(n_clusters=NClusters, random_state=0).fit(X)
-    for idx, centroid in enumerate(kmeans.cluster_centers_):
-        print('Cluster {0} - centroid {1}'.format(idx, centroid))
+    X = genfromtxt(inFile, delimiter = ',')
+
+    gmm = GaussianMixture(n_components=3)
+    gmm.fit(X)
+    for idx, (mean, covar, amp) in enumerate(zip(gmm.means_, gmm.covariances_, gmm.weights_)):
+        print('Stats of Gaussian {0}:\nMean:\t\t{1}\nCovariance:\t{2}\nWeight:\t\t{3}'.format(idx, mean, covar, amp))
+        print('-' * 40)
