@@ -18,7 +18,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 # End imports
 
-FastMapResult = namedtuple('FastMapResult', [])
 
 def getFarthestPoints(distances):
     first = np.random.randint(0, 9)
@@ -33,17 +32,17 @@ def getFarthestPoints(distances):
     res = (min(first, second), max(first, second))
     return res
 
-def getTriangularProjection(oldDistances, line, pt):
+def getTriangularProjection(distances, line, pt):
     first, second = line
-    farthest = oldDistances[first][second]
-    return (oldDistances[first][pt]**2 + farthest**2 - oldDistances[second][pt]**2)/(2 * farthest)
+    farthest = distances[first][second]
+    return (distances[first][pt]**2 + farthest**2 - distances[second][pt]**2)/(2 * farthest)
 
-def reComputeDistances(distances, lastDims):
-    res = copy.deepcopy(distances)
-    numPoints = len(distances)
+def reComputeDistances(oldDistances, lastDims):
+    res = copy.deepcopy(oldDistances)
+    numPoints = len(oldDistances)
     for i in range(numPoints):
         for j in range(numPoints):
-            tmp = distances[i][j]**2 - (lastDims[i] - lastDims[j])**2
+            tmp = oldDistances[i][j]**2 - (lastDims[i] - lastDims[j])**2
             res[i][j] = np.sqrt(tmp)
 
     return res
@@ -71,7 +70,6 @@ def fastMap(distances, numDims):
 
 if __name__ == '__main__':
     import sys
-    import pprint
 
     HELP_TEXT = '<USAGE>: {0} <distance b/w points> <number of points> <number of dims> <word list file>'
     if len(sys.argv) != 5:
