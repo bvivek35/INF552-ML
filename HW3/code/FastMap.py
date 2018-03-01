@@ -6,7 +6,8 @@
                         Vivek Bharadwaj <vivekb> <vivekb@usc.edu>
                         Shushyam Malige Sharanappa <maligesh> <maligesh@usc.edu>
                         Raveena Mathur <raveenam> <raveenam@usc.edu>
-    This is a python example.
+    This is a python implementation of the FastMap algorithm. The distances are provided in a data file.
+    The functions defined in this file require only the distances matrix to be provided.
 '''
 
 __version__ = '1.0'
