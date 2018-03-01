@@ -1,5 +1,5 @@
-#### Clustering
-Implementation of Clustering using KMeans(hard membership) and Gaussian Mixture Models(soft membership). Uses NumPy array for modeling data points in ND space.
+#### PCA and FastMap
+Implementation of Principal Component Analysis(PCA) for Dimensionality Reduction and FastMap for embedding entities into euclidean plane. Uses NumPy array for modeling data points in ND space.
 1. question/ - contains the zip file and the pdf containing the exercise
 2. code/ - contains the source code for implementation
 3. data/ - contains the dataset for the exercise
@@ -15,6 +15,6 @@ To run the samples, cd to code directory
 $ cd code
 Then, run the shell script files:
 For example:
-$ ./RunKMeansClustering.sh
+$ ./RunPCA.sh
 
 The shell files will invoke the required pgm with the correct args.
