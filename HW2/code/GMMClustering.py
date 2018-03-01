@@ -6,7 +6,7 @@
                         Vivek Bharadwaj <vivekb> <vivekb@usc.edu>
                         Shushyam Malige Sharanappa <maligesh> <maligesh@usc.edu>
                         Raveena Mathur <raveenam> <raveenam@usc.edu>
-    This is a python implementation of Clustering using K-Means Algorithm.
+    This is a python implementation of Soft Clustering using Gaussian Mixture Models.
 '''
 
 __version__ = '1.0'
@@ -113,9 +113,10 @@ def GMMCluster(pts, K):
         '''
             R = [
                 [r11, r21, r31, ... rn1]
-                [r11, r21, r31, ... rn1]
-                [r11, r21, r31, ... rnk]
+                [r12, r22, r32, ... rn2]
+                [r1k, r2k, r3k ... rnk]
             ]
+            ric -> responsibility of data point (i) to cluster (c)
         '''
         R = [
                 np.asarray([
@@ -164,5 +165,5 @@ if __name__ == '__main__':
 
     gmm = GMMCluster(pts, K = NClusters)
     for idx, gaussian in enumerate(gmm.gaussians):
-        print('Guassian {0}:\n\tMean: {1}\n\tAmplitude: {2}\n\tCovariance: {3}'
+        print('Gaussian {0}:\n\tMean: {1}\n\tAmplitude: {2}\n\tCovariance: {3}'
                 .format(idx, gaussian.mean, gaussian.amp, gaussian.covar))

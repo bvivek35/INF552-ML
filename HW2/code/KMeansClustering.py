@@ -60,19 +60,8 @@ Cluster = namedtuple('Cluster', ['clusterNumber', 'centroid', 'pts'])
 @logArgsRet(logger)
 def getRandomPtsWithinRange(pts, numPoints):
     '''
-    # mins = [min(col1), min(col2), min(col3), ...]
-    mins = np.apply_along_axis(min, arr=pts, axis=0)
-    # maxs = [max(col1), max(col2), max(col3), ...])
-    maxs = np.apply_along_axis(max, arr=pts, axis=0)
-    # ranges = [[min1, min2, min3, ...]
-    #           [max1, max2, max3, ...]]
-    ranges = np.vstack((mins, maxs))
-    # centriods = [[C1x, C1y, C1z, ...]
-    #              [C2x, C2y, C2z, ...], ...]
-    randPts = np.vstack((
-        np.apply_along_axis(lambda x: np.random.uniform(x[0], x[1]), arr=ranges, axis=0)
-        for _ in range(numPoints)
-        ))
+        Pick randomly numPoints from pts.
+        These will be the initial random centroids.
     '''
     randPts = np.vstack((pts[idx] for idx in random.sample(range(0, len(pts)), numPoints)))
 
