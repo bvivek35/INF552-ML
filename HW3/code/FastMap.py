@@ -94,8 +94,13 @@ if __name__ == '__main__':
         distances[a-1][b-1], distances[b-1][a-1] = dist, dist
 
     coOrds = fastMap(distances, numDims)
-    for idx, coOrd in enumerate(coOrds):
-        print('ObjectId {0} - {1}'.format(idx+1, coOrd))
+
+    wordList = []
+    with open(wordFile) as fh:
+        wordList = list(map(str.strip, fh.readlines()))
+
+    for word, coOrd in zip(wordList, coOrds):
+        print('Embed {0} - {1}'.format(word, coOrd))
 
     if numDims == 2:
         wordList = []
