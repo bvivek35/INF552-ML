@@ -14,6 +14,7 @@ __version__ = '1.0'
 # Imports
 import os
 import logging
+from collections import namedtuple
 from numpy import genfromtxt
 from sklearn.mixture import GaussianMixture
 # End imports
@@ -52,6 +53,7 @@ def logArgsRet(logger=None):
     return logArgsRetWrapped
 
 
+PrincipalComponent = namedtuple('PrincipalComponent', ['componentNumber', 'eigVal', 'eigVec'])
 
 @logArgsRet(logger)
 def decomposeComponents(X, targetDims):
@@ -61,9 +63,13 @@ def decomposeComponents(X, targetDims):
     eigVals, eigVecs = LA.eig(covar)
     principalComps = sorted(enumerate(eigVals), key=lambda x:x[1], reverse=True)[:targetDims]
     return [
-            (count, eigVal, eigVecs[:,idx]) \
+            PrincipalComponent(count, eigVal, eigVecs[:,idx]) \
             for count, (idx, eigVal) in enumerate(principalComps)
             ]
+
+def transform(oldPoint, components):
+    tmp = np.asarray([comp.eigVec for comp in components])
+    return tmp.dot(oldPoint)
 
 if __name__ == '__main__':
     # Imports
@@ -72,13 +78,14 @@ if __name__ == '__main__':
     import numpy.linalg as LA
     # End imports
 
-    HELP_TEXT = 'USAGE: {0} <PCA Data File> <Target Dimension>'
-    if len(sys.argv) != 3:
+    HELP_TEXT = 'USAGE: {0} <PCA Data File> <Target Dimension> <output file for points>'
+    if len(sys.argv) != 4:
         print(HELP_TEXT.format(sys.argv[0]))
         sys.exit(1)
     else:
         inFile = sys.argv[1]
         targetDims = int(sys.argv[2])
+        outFile = sys.argv[3]
 
     X = np.genfromtxt(inFile, delimiter='\t')
 
@@ -88,3 +95,10 @@ if __name__ == '__main__':
     principalComps = decomposeComponents(X, targetDims)
     for count, eigVal, eigVec in principalComps:
         print('Base Vector / Principal Component {0}: {1}'.format(count, eigVec))
+
+    np.set_printoptions(suppress=True)
+    with open(outFile, 'w') as fh:
+        for orig in X:
+            new = transform(orig, principalComps)
+            fh.write('Point: {0} -> {1}'.format(orig, new))
+            fh.write('\n')

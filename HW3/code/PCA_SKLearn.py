@@ -14,17 +14,18 @@ __version__ = '1.0'
 if __name__ == '__main__':
     # Imports
     import sys
-    from numpy import genfromtxt
+    from numpy import genfromtxt, set_printoptions
     from sklearn.decomposition import PCA
     # End imports
 
-    HELP_TEXT = 'USAGE: {0} <PCA Data File> <Target Dimension>'
-    if len(sys.argv) != 3:
+    HELP_TEXT = 'USAGE: {0} <PCA Data File> <Target Dimension> <output file for points>'
+    if len(sys.argv) != 4:
         print(HELP_TEXT.format(sys.argv[0]))
         sys.exit(1)
     else:
         inFile = sys.argv[1]
         TargetDims = int(sys.argv[2])
+        outFile = sys.argv[3]
 
     X = genfromtxt(inFile, delimiter='\t')
 
@@ -35,3 +36,11 @@ if __name__ == '__main__':
     pca.fit(X)
     for idx, pc in enumerate(pca.components_):
         print('Base Vector / Principal Component {0}: {1}'.format(idx, pc))
+
+    transformed = pca.transform(X)
+
+    set_printoptions(suppress=True)
+    with open(outFile, 'w') as fh:
+        for orig, new in zip(X, transformed):
+            fh.write('Point: {0} -> {1}'.format(orig, new))
+            fh.write('\n')
