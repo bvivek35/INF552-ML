@@ -52,6 +52,7 @@ if __name__ == '__main__':
     HELP_TEXT = 'USAGE: {0} <input file>'
     if len(sys.argv) != 2:
         print(HELP_TEXT.format(sys.argv[0]))
+        sys.exit(1)
     else:
         inFile = sys.argv[1]
     
