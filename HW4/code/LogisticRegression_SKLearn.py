@@ -36,8 +36,16 @@ if __name__ == '__main__':
 
     model = LogisticRegression()
     model.fit(X, Y)
-    YPredict = model.predict(X)
-    
+
+    YPred = model.predict(X)
+    nCorrect = where(Y==YPred)[0].shape[0]
+    nTotal = YPred.shape[0]
+    accuracy = nCorrect / nTotal
 
     print('Final Weights: {0}'.format(model.coef_))
-    print('No. of Correct Predict: {0}'.format(where(YPredict == Y)[0].shape))
+    print('\n\t\t'.join([
+            'Accuracy on the train dataset: {0}', 
+            'Predicted Correctly: {1}', 
+            'Total Samples: {2}'
+            ]).format(accuracy, nCorrect, nTotal)
+        )
