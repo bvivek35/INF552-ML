@@ -1,60 +1,40 @@
-#!/usr/bin/env python3
-
-'''
-    Class: INF552 at USC
-    Submission Member:
-                        Vivek Bharadwaj <vivekb> <vivekb@usc.edu>
-                        Shushyam Malige Sharanappa <maligesh> <maligesh@usc.edu>
-                        Raveena Mathur <raveenam> <raveenam@usc.edu>
-    This is a python implementation of Linear Regression.
-'''
-
-__version__ = '1.0'
-
-# Imports
+import pandas as pd
+import os
 import numpy as np
-# End imports
+import matplotlib.pyplot as plt
+from numpy.linalg import inv
 
-class LinearRegression():
-    '''
-        Implements Linear Regression.
-    '''
-    def __init__(self, weights=[]):
-        self.weights = weights
-    
-    def train(self, X, Y):
-        '''
-            X = Data Matrix.
-            But in Formula, 
+import sys
+HELP_TEXT = 'USAGE: {0} <input file>'
+if len(sys.argv) != 2:
+    print(HELP_TEXT.format(sys.argv[0]))
+    sys.exit(1)
+else:
+    inFile = sys.argv[1]
 
-            W = (D * D.T)^-1 * D * Y,
-            D is of order (d X N)
-            But X is of order (N X d)
-        '''
-        D = X.T
-        tmp = np.linalg.inv(np.matmul(D, D.T))
-        self.weights = np.matmul(np.matmul(tmp, D), Y)
+data=pd.read_csv(inFile,header=None)
 
-if __name__ == '__main__':
-    import sys
 
-    HELP_TEXT = 'USAGE: {0} <input file>'
-    if len(sys.argv) != 2:
-        print(HELP_TEXT.format(sys.argv[0]))
-        sys.exit(1)
-    else:
-        inFile = sys.argv[1]
-    
-    data = np.loadtxt(inFile, \
-                    delimiter=',', \
-                    dtype='float', \
-                    usecols=(0,1,2) \
-                )
+def linearregression(X, y):
+    return inv(X.T.dot(X)).dot(X.T).dot(y)
 
-    X = data[:, :-1]
-    Y = data[:, -1]
+def normalise(X):
+    n = X.shape[1]
+    mean2 = np.array([np.mean(X[:,i]) for i in range(n)])
+    deviation = np.array([np.std(X[:,i]) for i in range(n)])
+    normalise2 = (X - mean2) / deviation
 
-    model = LinearRegression()
-    model.train(X, Y)
+    return normalise2
 
-    print('Final Weights: {0}'.format(model.weights))
+y=[]
+
+for item in data:
+    y=data[2]
+    x=list(zip(data[0],data[1]))
+X= np.matrix(x)
+#X=normalise(X)
+X = np.column_stack((np.ones(len(X)), X))
+
+#linearregression(X,y)
+p=linearregression(X,y)
+print('Final Weights [W0, W1, W2,...]: {0}'.format(p))

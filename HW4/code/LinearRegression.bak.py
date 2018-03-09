@@ -6,17 +6,37 @@
                         Vivek Bharadwaj <vivekb> <vivekb@usc.edu>
                         Shushyam Malige Sharanappa <maligesh> <maligesh@usc.edu>
                         Raveena Mathur <raveenam> <raveenam@usc.edu>
-    This is a python implementation of Linear Regression using Scikit-Learn library.
+    This is a python implementation of Linear Regression.
 '''
 
 __version__ = '1.0'
 
+# Imports
+import numpy as np
+# End imports
+
+class LinearRegression():
+    '''
+        Implements Linear Regression.
+    '''
+    def __init__(self, weights=[]):
+        self.weights = weights
+    
+    def train(self, X, Y):
+        '''
+            X = Data Matrix.
+            But in Formula, 
+
+            W = (D * D.T)^-1 * D * Y,
+            D is of order (d X N)
+            But X is of order (N X d)
+        '''
+        D = X.T
+        tmp = np.linalg.inv(np.matmul(D, D.T))
+        self.weights = np.matmul(np.matmul(tmp, D), Y)
+
 if __name__ == '__main__':
-    # Imports
     import sys
-    from numpy import loadtxt
-    from sklearn.linear_model import LinearRegression
-    # End imports
 
     HELP_TEXT = 'USAGE: {0} <input file>'
     if len(sys.argv) != 2:
@@ -25,7 +45,7 @@ if __name__ == '__main__':
     else:
         inFile = sys.argv[1]
     
-    data = loadtxt(inFile, \
+    data = np.loadtxt(inFile, \
                     delimiter=',', \
                     dtype='float', \
                     usecols=(0,1,2) \
@@ -35,6 +55,6 @@ if __name__ == '__main__':
     Y = data[:, -1]
 
     model = LinearRegression()
-    model.fit(X, Y)
+    model.train(X, Y)
 
-    print('Final Weights: {0}'.format(model.coef_))
+    print('Final Weights: {0}'.format(model.weights))
