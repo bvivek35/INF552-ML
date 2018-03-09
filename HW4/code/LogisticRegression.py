@@ -20,25 +20,13 @@ class LogisticRegression():
     '''
         Implements Logistic Regression.
     '''
-    @staticmethod
-    def sigmoid(arg):
-        tmp = np.exp(arg)
-        # tmp1 = math.exp(arg)
-        return 1 / (1 + tmp)
 
     @staticmethod
-    def sigmoidArg(w, x, y):
-        return  - y * np.dot(w.T, x)
-
-    @staticmethod
-    def gradient(weights, x, y, N):
-        sigArg = LogisticRegression.sigmoidArg(weights, x, y)
-        print('sigarg: {0}, {1}, {2}, {3}'.format(weights, x, y, sigArg))
-        sig = LogisticRegression.sigmoid(sigArg)
-        expPart = np.exp(sigArg)
-        tmp = -(sig * expPart * y * x) / N
-        # tmp = -(sig * y * x)
-        return tmp
+    def findGradient(weights, x, y):
+        arg = y * np.dot(weights, x)
+        tmp = 1 + np.exp(arg)
+        res = (x * y) / tmp
+        return res
 
     def __init__(self, weights=[], alpha=0.001, maxIter=1000):
         self.weights = weights
@@ -47,29 +35,16 @@ class LogisticRegression():
     
     def train(self, X, Y):
         N, d = X.shape
-        self.weights = np.random.random(d)
+        X = np.insert(X, 0, 1, axis=1)
+        self.weights = np.random.random(d+1)
         iter = 0
         while iter < self.maxIter:
-            tmp = np.zeros(d)
+            gradient = np.zeros(d+1)
             for x, y in zip(X, Y):
-                tmp += LogisticRegression.gradient(self.weights, x, y, N)
-            self.weights -= self.alpha * tmp
+                gradient = np.add(gradient, LogisticRegression.findGradient(self.weights, x, y))
+            gradient /= N
+            self.weights += self.alpha * gradient
             iter += 1
-
-    def predict(self, X):
-        Y = []
-        for x in X:
-            arg_neg = LogisticRegression.sigmoidArg(self.weights, x, -1)
-            prob_neg = LogisticRegression.sigmoid(arg_neg)
-            arg_pos = LogisticRegression.sigmoidArg(self.weights, x, 1)
-            prob_pos = LogisticRegression.sigmoid(arg_pos)
-            if prob_neg > prob_pos:
-                res = -1
-            else:
-                res = 1
-            Y.append(res)
-        
-        return Y
 
 if __name__ == '__main__':
     import sys
@@ -89,7 +64,6 @@ if __name__ == '__main__':
     X = data[:, :-1]
     Y = data[:, -1]
 
-    model = LogisticRegression(alpha=0.001, maxIter=2000)
+    model = LogisticRegression(alpha=0.05, maxIter=7000)
     model.train(X, Y)
-    model.predict(X)
     print('Final Weights: {0}'.format(model.weights))
